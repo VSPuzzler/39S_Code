@@ -176,7 +176,8 @@ void displayButtonControls( int index, bool pressed ) {
 void move_arm (float rotations){
   Arm.rotateFor(rotations,rotationUnits::deg,100,velocityUnits::pct,false);
 }
-void move (float rotations, float speed){
+void move (float rotations, float speed, int arm){
+    Arm.rotateFor(arm,rotationUnits::deg,90,velocityUnits::pct,false);
     Right.rotateFor(rotations,rotationUnits::rev,speed,velocityUnits::pct,false);
     RightBack.rotateFor(rotations,rotationUnits::rev,speed,velocityUnits::pct,false);
     LeftBack.rotateFor(rotations,rotationUnits::rev,speed,velocityUnits::pct,false);
@@ -429,141 +430,147 @@ void autonomous( void ) {
       //Grab Blue Mogo     
       turnBackClaw(true);
       turnClaw(true);
-      move(.1,100);
+      move(.1,100,0);
       turnRight(15,70,0);
       gyroPID(90);
-      move(3.65,90);
+      move(3.65,90,0);
       //Grab Yellow Mogo
       turnClaw(false);
       //Stack Yellow Mogoxx
       turnRight(15,60,0);
       gyroPID(110);
       turnArm(1400,100,0);
-      move(5,100);
-      turnArm(-100,100,0);
+      move(5,100,-100);
       turnClaw(true);
       turnArm(100,100,0);
       //Stack Middle Yellow Mogo
-      move(-1,70);
-      turnArm(-1400,100,0);
+      move(-1,70,-1400);
       turnRight(15,50,0);
       gyroPID(270);
-      move(1.5,70);
+      move(1.5,70,0);
       //Grab Middle Yellow Mogo
       turnClaw(false);
       //Stack Middle Yellow Mogo
       turnArm(1500,100,0);
       turnLeft(20,70,0);
       gyroPID(90);
-      move(1.5,70);
-      turnArm(-150,100,0);
+      move(1.5,70,-150);
       turnClaw(true);
       turnArm(150,100,0);
       //Grab Farthest Middle Yellow Mogo
-      move(-1,70);
+      move(-1,70,0);
       turnRight(15,70,0);
       gyroPID(200);
-      move(3,70);
+      move(3,70,0);
             
     }
     else if(LeftRush){
       yeet.set(true);
       turnBackClaw(true);
       turnClaw(true);
-      move(2.25,100);
+      move(2.25,100,0);
       turnClaw(false);
-      move(.15,100);
-      move(-1.65,100);
+      wait(50,msec);
+      move(-1.65,100,500);
       turnRight(30,50,0);
       gyroPID(45);
-      move(-1,50);
+      move(-1,50,0);
       turnLeft(30,50,0);
       gyroPID(315);
       yeet.set(false);
-      move(-1.8,50);
+      move(-1.8,50,0);
       turnBackClaw(false);
-      move(2,50);
+      move(2,50,0);
       turnLeft(15,50,0);
       gyroPID(45);
-      turnArm(500,100,0);
       intake(true);
-      move(2,50);
+      move(2,50,0);
     }
     else if(RightRush){
       turnClaw(true);
       turnBackClaw(true);
-      move(2.25,100);
+      move(2.25,100,0);
       turnClaw(false);
-      move(.15,100);
-      move(-1.65,100);
+      wait(50,msec);
+      move(-1.65,100,400);
       turnLeft(20,50,0);
       gyroPID(270);
-      move(-.2,60);
+      move(-.2,60,0);
       move_time_back(1);
       turnBackClaw(false);
-      turnArm(400,100,0);
       intake(true);
-      move(.5,100);      
+      move(.5,100,0);      
       turnRight(50,50,0);
       gyroPID(2);
-      move(1.9,30);
-      move(-2.5,60);
+      move(1.9,30,0);
+      move(-2.5,60,0);
     }
     else if(Middle){  
       turnClaw(true);  
       turnBackClaw(true);
-      move(3.3,100);
+      move(3.3,100,0);
       turnClaw(false);
-      move(-1.5,100);
+      wait(50,msec);
+      move(-1.5,100,350);
       turnLeft(25,80,0);
       gyroPID(270);
-      move(-3,70);
+      move(-3,70,0);
       move_time_back(1);
       turnBackClaw(false);
       intake(true);
-      turnArm(700,100,0);
-      move(1.5,50);
+      move(1.5,50,0);
       
     }
     else if(Hyper){
-
+      yeet.set(true);
+      turnBackClaw(true);
+      turnClaw(true);
+      move(2,50,0);
+      turnRight(20,50,0);
+      gyroPID(90);
+      move(10,50,500);
+      turnLeft(30,50,0);
+      gyroPID(270);
+      move(-1,50,0);
+      turnBackClaw(false);
+      intake(true);     
+      move(2,50,0);
+      
     }
     else if(FillGoal){
       turnBackClaw(true);
-      turnArm(800,100,0);
-      move(-1,50);
+      move(-1,50,800);
       turnBackClaw(false);
       intake(true);
-      move(1.5,20);
-      move(-1.5,50);
-      move(1.5,20);
-      move(-1.5,50);
-      move(1.5,20);
+      move(1.5,20,0);
+      move(-1.5,50,0);
+      move(1.5,20,0);
+      move(-1.5,50,0);
+      move(1.5,20,0);
 
     }
     else if(RightMiddle){
       turnClaw(true);
       turnBackClaw(true);
-      move(2.25,100);
+      move(2.25,100,0);
       turnClaw(false);
       wait(50,msec);
-      move(.15,100);
-      move(-1.65,100);
+      move(-1.65,100,0);
       turnRight(100,100,0);
       turnClaw(true);
       turnLeft(20,50,0);
       gyroPID(303);
-      move(2.8,90);
+      move(2.8,90,0);
       turnClaw(false);
-      move(-3,100);
+      wait(50,msec);
+      move(-3,100,0);
       turnLeft(20,50,0);
       gyroPID(270);
-      move(-3,50);
+      move(-3,50,500);
       move_time_back(1);
       turnBackClaw(false);
       intake(true);
-      turnArm(700,100,0);
-      move(1.5,50);
+      move(1.5,50,0);
 
     }
 }
@@ -630,10 +637,13 @@ void usercontrol( void ) {
       Intake.spin(reverse);
     }
     if (Controller1.ButtonRight.pressing()){
-      yeet.set(true);
+      Left.stop(brake);
+      Right.stop(brake);
+      LeftBack.stop(brake);
+      RightBack.stop(brake);
     }
     else if(Controller1.ButtonLeft.pressing()){
-      yeet.set(false);
+
     }
   }
 }
@@ -677,10 +687,4 @@ int main() {
         this_thread::sleep_for(10);
     }
 }
-
-
-
-
-
-
 
