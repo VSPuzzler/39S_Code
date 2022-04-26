@@ -378,39 +378,13 @@ void allBaseVoltage(bool Dir, double v){
     LeftBack.spin(reverse, v, volt);
   }
 }
-void rush(float tim=3) { // tim is backup time (maybe set high if you dont need other goals in auotn so u dont lose goal)
-  float rot=2.5;
-  double fwd=1300;
-  //yeet.set(true); //ring deploy
-  //allBaseVoltage(true, 12);
-  Left.setVelocity(100, percent);
-  Right.setVelocity(100, percent);
-  LeftBack.setVelocity(100, percent);
-  RightBack.setVelocity(100, percent);
-  Left.setPosition(0, degrees);
-  Right.setPosition(0, degrees);
-  RightBack.setPosition(0, degrees);
-  LeftBack.setPosition(0, degrees);
-  while(Left.position(degrees)<fwd && Right.position(degrees)<fwd){
-    Left.spin(forward);
-    Right.spin(forward);
-    RightBack.spin(forward);
-    LeftBack.spin(forward);
+void rush(float rot,float tim=1) { // tim is backup time (maybe set high if you dont need other goals in auotn so u dont lose goal)
+  LeftBack.setPosition(0,turns);
+  RightBack.setPosition(0,turns);
+  allBaseVoltage(true, 12);
+  while((LeftBack.position(rev)+RightBack.position(rev))/2 < rot){ //rot is the # of rotations
+    vex::task::sleep(5);
   }
-  Left.stop();
-  Right.stop();
-  LeftBack.stop();
-  RightBack.stop();
-
-  /*
-  while(float((Left.position(turns)+Right.position(turns))/2) < rot){ //rot is the # of rotations
-    vex::task::sleep(3);
-  }
-  */
-  turnClaw(false);
-  allBaseVoltage(false, 12);
-  vex::task::sleep(tim*1000);
-  brake_unchecked(); //stop all motors
 }
 
   
@@ -468,28 +442,29 @@ void autonomous( void ) {
       yeet.set(true);
       turnBackClaw(true);
       turnClaw(true);
-      move(2.25,100,0);
+      rush(2.3);
       turnClaw(false);
       wait(50,msec);
-      move(-1.65,100,500);
+      move(-1.5,100,500);
       turnRight(30,50,0);
       gyroPID(45);
-      move(-1,50,0);
-      turnLeft(30,50,0);
-      gyroPID(315);
+      move(-.9,50,0);
+      turnLeft(150,50,0);
+      gyroPID(302);
       yeet.set(false);
-      move(-1.8,50,0);
+      move(-1,50,0);
+      move_time_back(.75);
       turnBackClaw(false);
-      move(2,50,0);
-      turnLeft(15,50,0);
-      gyroPID(45);
+      turnLeft(50,50,0);
+      gyroPID(270);
       intake(true);
-      move(2,50,0);
-    }
+      move(1.5,30,200);
+      
+     }
     else if(RightRush){
       turnClaw(true);
       turnBackClaw(true);
-      move(2.25,100,0);
+      rush(2.25);
       turnClaw(false);
       wait(50,msec);
       move(-1.65,100,400);
@@ -508,7 +483,7 @@ void autonomous( void ) {
     else if(Middle){  
       turnClaw(true);  
       turnBackClaw(true);
-      move(3.3,100,0);
+      rush(3.3);
       turnClaw(false);
       wait(50,msec);
       move(-1.5,100,350);
@@ -552,7 +527,7 @@ void autonomous( void ) {
     else if(RightMiddle){
       turnClaw(true);
       turnBackClaw(true);
-      move(2.25,100,0);
+      rush(2.25);
       turnClaw(false);
       wait(50,msec);
       move(-1.65,100,0);
@@ -687,4 +662,10 @@ int main() {
         this_thread::sleep_for(10);
     }
 }
+
+
+
+
+
+
 
