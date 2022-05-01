@@ -19,8 +19,7 @@
 // Intake               motor         4               
 // Gyro                 inertial      7               
 // Claw                 digital_out   A               
-// Back_Left            digital_out   B               
-// Back_Right           digital_out   C               
+// Back                 digital_out   B               
 // Controller1          controller                    
 // LeftBack             motor         1               
 // RightBack            motor         8               
@@ -226,8 +225,7 @@ void turnClaw (bool value){
   Claw.set(value);
 }
 void turnBackClaw (bool value){
-  Back_Left.set(value);
-  Back_Right.set(value);
+  Back.set(value);
 }
 void goal_rush (){
   Left.spin( fwd, 12.0, voltageUnits::volt );
@@ -440,7 +438,7 @@ void autonomous( void ) {
     }
     else if(LeftRush){
       yeet.set(true);
-      turnBackClaw(true);
+      turnBackClaw(false);
       turnClaw(true);
       rush(2.3);
       turnClaw(false);
@@ -453,69 +451,77 @@ void autonomous( void ) {
       gyroPID(302);
       yeet.set(false);
       move(-1,50,0);
-      move_time_back(.75);
+      /*
       turnBackClaw(false);
       turnLeft(50,50,0);
       gyroPID(270);
       intake(true);
       move(1.5,30,200);
-      
+      */
      }
     else if(RightRush){
       turnClaw(true);
-      turnBackClaw(true);
+      turnBackClaw(false);
       rush(2.25);
       turnClaw(false);
       wait(50,msec);
-      move(-1.65,100,400);
+      move(-1.65,100,600);
       turnLeft(20,50,0);
       gyroPID(270);
       move(-.2,60,0);
       move_time_back(1);
-      turnBackClaw(false);
+      turnBackClaw(true);
       intake(true);
       move(.5,100,0);      
-      turnRight(50,50,0);
-      gyroPID(2);
-      move(1.9,30,0);
+      turnRight(400,50,0);
+      //gyroPID(0);
+      move(1.9,15,0);
       move(-2.5,60,0);
+      intake(false);
     }
     else if(Middle){  
       turnClaw(true);  
-      turnBackClaw(true);
-      rush(3.3);
+      turnBackClaw(false);
+      rush(3);
       turnClaw(false);
       wait(50,msec);
-      move(-1.5,100,350);
+      move(-2.3,100,350);
       turnLeft(25,80,0);
       gyroPID(270);
-      move(-3,70,0);
+      move(-1.3,70,0);
       move_time_back(1);
-      turnBackClaw(false);
+      turnBackClaw(true);
+      move(.5,60,0);
       intake(true);
-      move(1.5,50,0);
+      move(1,50,0);
+
       
     }
     else if(Hyper){
       yeet.set(true);
-      turnBackClaw(true);
-      turnClaw(true);
-      move(2,50,0);
-      turnRight(20,50,0);
-      gyroPID(90);
-      move(10,50,500);
-      turnLeft(30,50,0);
-      gyroPID(270);
-      move(-1,50,0);
       turnBackClaw(false);
+      turnClaw(true);
+      move(1.3,50,0);
+      yeet.set(false);
+      turnRight(20,50,0);
+      gyroPID(89.6);
+      move(4.9,50,500);
+      turnLeft(30,50,0);
+      gyroPID(260);
+      move(-.5,50,0);
+      move_time_back(.75);
+      turnBackClaw(true);
       intake(true);     
-      move(2,50,0);
-      
+      move(1,50,0);
+      turnRight(50,50,0);
+      gyroPID(0);
+      turnBackClaw(false);
+      intake(false);
     }
     else if(FillGoal){
-      turnBackClaw(true);
-      move(-1,50,800);
       turnBackClaw(false);
+      move(-1,50,800);
+      turnBackClaw(true);
       intake(true);
       move(1.5,20,0);
       move(-1.5,50,0);
@@ -526,14 +532,16 @@ void autonomous( void ) {
     }
     else if(RightMiddle){
       turnClaw(true);
-      turnBackClaw(true);
+      turnBackClaw(false);
       rush(2.25);
       turnClaw(false);
       wait(50,msec);
       move(-1.65,100,0);
-      turnRight(100,100,0);
+      turnRight(75,100,0);
       turnClaw(true);
-      turnLeft(20,50,0);
+      move(.3,50,0);
+      move(-.3,50,0);
+      turnLeft(175,50,0);
       gyroPID(303);
       move(2.8,90,0);
       turnClaw(false);
@@ -541,12 +549,13 @@ void autonomous( void ) {
       move(-3,100,0);
       turnLeft(20,50,0);
       gyroPID(270);
-      move(-3,50,500);
+      move(-2.5,50,500);
       move_time_back(1);
-      turnBackClaw(false);
+      turnBackClaw(true);
+      move(.5,50,0);
       intake(true);
-      move(1.5,50,0);
-
+      move(1,50,0);
+      
     }
 }
 
@@ -559,11 +568,8 @@ void usercontrol( void ) {
   Left.setStopping(hold);
   RightBack.setStopping(hold);
   LeftBack.setStopping(hold);
-  LeftBack.stop(brake);
+  LeftBack.stop(hold);
   Arm.setStopping(hold);
-  Left.stop(brake);
-  RightBack.stop(brake);
-  LeftBack.stop(brake);
   while(1){
     //Drivetrain Code
     double left_speed=Controller1.Axis3.position();
@@ -595,12 +601,10 @@ void usercontrol( void ) {
     }
     //BackClaw turning
     if (Controller1.ButtonUp.pressing()){
-      Back_Left.set(true);
-      Back_Right.set(true);
+      Back.set(false);
     }
     else if(Controller1.ButtonDown.pressing()){
-      Back_Left.set(false);
-      Back_Right.set(false);
+      Back.set(true);
     }
     if (Controller1.ButtonX.pressing()){
       Intake.spin(forward);
@@ -612,13 +616,13 @@ void usercontrol( void ) {
       Intake.spin(reverse);
     }
     if (Controller1.ButtonRight.pressing()){
-      Left.stop(brake);
-      Right.stop(brake);
-      LeftBack.stop(brake);
-      RightBack.stop(brake);
+      Left.stop(hold);
+      Right.stop(hold);
+      LeftBack.stop(hold);
+      RightBack.stop(hold);
     }
     else if(Controller1.ButtonLeft.pressing()){
-
+      yeet.set(false);
     }
   }
 }
