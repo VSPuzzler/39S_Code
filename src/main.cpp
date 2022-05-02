@@ -562,18 +562,30 @@ void autonomous( void ) {
 
 
 void usercontrol( void ) {
+  bool holding = false;
   Arm.setVelocity(100,percent);
-  Intake.setVelocity(100,percent);
-  Right.setStopping(hold);
-  Left.setStopping(hold);
-  RightBack.setStopping(hold);
-  LeftBack.setStopping(hold);
-  LeftBack.stop(hold);
   Arm.setStopping(hold);
+  Intake.setVelocity(100,percent);
+  Right.setStopping(coast);
+  Left.setStopping(coast);
+  RightBack.setStopping(coast);
+  LeftBack.setStopping(coast);
+
   while(1){
     //Drivetrain Code
     double left_speed=Controller1.Axis3.position();
     double right_speed=Controller1.Axis2.position();
+    if (left_speed <=5){
+      left_speed = 0;
+    }
+    else{
+    }
+    if (right_speed <=5){
+      right_speed = 0;
+    }
+    else{
+    }
+
     Left.setVelocity(left_speed,percent);
     LeftBack.setVelocity(left_speed,percent);
     RightBack.setVelocity(right_speed,percent);
@@ -616,10 +628,20 @@ void usercontrol( void ) {
       Intake.spin(reverse);
     }
     if (Controller1.ButtonRight.pressing()){
-      Left.stop(hold);
-      Right.stop(hold);
-      LeftBack.stop(hold);
-      RightBack.stop(hold);
+      if (holding == false){
+        Left.setStopping(hold);
+        Right.setStopping(hold);
+        LeftBack.setStopping(hold);
+        RightBack.setStopping(hold);
+        holding = true;
+      }
+      else if (holding == true){
+        Right.setStopping(coast);
+        Left.setStopping(coast);
+        RightBack.setStopping(coast);
+        LeftBack.setStopping(coast);
+        holding = false;
+      }
     }
     else if(Controller1.ButtonLeft.pressing()){
       yeet.set(false);
